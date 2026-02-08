@@ -14,7 +14,7 @@ Curso de aprendizado rápido das principais funcionalidades da linguagem Go, fer
 ## 🎯 Pré-requisitos
 
 - Conhecimento básico de programação
-- Go 1.21 ou superior instalado
+- Go 1.20 ou superior instalado
 - Editor de código (VS Code, GoLand, ou similar)
 - Git instalado
 

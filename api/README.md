@@ -33,7 +33,7 @@ api/
 
 ### Pré-requisitos
 
-- Go 1.21 ou superior
+- Go 1.20 ou superior
 
 ### Instalação
 
@@ -325,7 +325,7 @@ GOOS=linux GOARCH=amd64 go build -o bin/api-linux cmd/api/main.go
 
 ```dockerfile
 # Exemplo de Dockerfile
-FROM golang:1.21-alpine AS builder
+FROM golang:1.24-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN go build -o api cmd/api/main.go

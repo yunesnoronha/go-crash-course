@@ -119,7 +119,10 @@ func deleteUser(w http.ResponseWriter, r *http.Request, id string) {
 	})
 }
 
-// generateID gera um ID simples (em produção, use UUID)
+// generateID gera um ID simples baseado em timestamp
+// NOTA: Esta é uma implementação simplificada para fins educacionais.
+// Em produção, use UUID (github.com/google/uuid) para garantir unicidade
+// mesmo em ambientes concorrentes e distribuídos.
 func generateID() string {
-	return time.Now().Format("20060102150405")
+	return time.Now().Format("20060102150405.000000")
 }

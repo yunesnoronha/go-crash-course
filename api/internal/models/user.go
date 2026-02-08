@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"sync"
 	"time"
 )
 
@@ -32,6 +33,7 @@ func (u *User) Validate() error {
 // UserRepository simula um repositório de usuários em memória
 type UserRepository struct {
 	users map[string]*User
+	mu    sync.RWMutex // Protege acesso concorrente ao map
 }
 
 // NewUserRepository cria uma nova instância do repositório
@@ -43,6 +45,9 @@ func NewUserRepository() *UserRepository {
 
 // FindAll retorna todos os usuários
 func (r *UserRepository) FindAll() []*User {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
 	users := make([]*User, 0, len(r.users))
 	for _, user := range r.users {
 		users = append(users, user)
@@ -52,6 +57,9 @@ func (r *UserRepository) FindAll() []*User {
 
 // FindByID busca um usuário por ID
 func (r *UserRepository) FindByID(id string) (*User, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
 	user, exists := r.users[id]
 	if !exists {
 		return nil, errors.New("usuário não encontrado")
@@ -64,12 +72,19 @@ func (r *UserRepository) Create(user *User) error {
 	if err := user.Validate(); err != nil {
 		return err
 	}
+
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
 	r.users[user.ID] = user
 	return nil
 }
 
 // Update atualiza um usuário existente
 func (r *UserRepository) Update(id string, user *User) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
 	existingUser, exists := r.users[id]
 	if !exists {
 		return errors.New("usuário não encontrado")
@@ -85,6 +100,9 @@ func (r *UserRepository) Update(id string, user *User) error {
 
 // Delete remove um usuário
 func (r *UserRepository) Delete(id string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
 	if _, exists := r.users[id]; !exists {
 		return errors.New("usuário não encontrado")
 	}
